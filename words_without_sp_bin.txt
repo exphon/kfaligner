@@ -1,0 +1,402 @@
+A a
+ABA a b a
+ABBA a bb a
+ABEOJI a b eo j i
+ACA a c a
+ACIM a c i m
+ADA a d a
+ADDA a dd a
+ADEUL a d eu l
+ADONG a d o ng
+AE ae
+AEBI ae b i
+AEJIJUNGJI ae j i j u ng j i
+AEMO ae m o
+AG a g
+AGA a g a
+AGGA a gg a
+AGGI a g g i
+AGI a g i
+AHA a a
+AHA a h a
+AI a i
+AIKU a i k u
+AJA a j a
+AJEOSSI a j eo ss i
+AJJA a jj a
+AKA a k a
+ALRYEOJUMYEON a l l yeo j u m yeo n
+AMA a m a
+AMUGAE a m u g ae
+AN a n
+ANA a n a
+ANGA a ng a
+ANGAE a n g ae
+ANMA a n m a
+AO a o
+APA a p a
+APAYO a p a yo
+ARA a r a
+ASA a s a
+ASSA a ss a
+ATA a t a
+AU a u
+BA b a
+BAB b a b
+BABO b a b o
+BAD b a d
+BAE b ae
+BAETAL b ae t a l
+BAG b a g
+BAL b a l
+BAM b a m
+BAN b a n
+BANG b a ng
+BATMEORI b a n m eo r i
+BATMEORI b a t m eo r i
+BBA bb a
+BBANG bb a ng
+BBEU bb eu
+BBUL bb u l
+BBYEO bb yeo
+BEONGEORI b eo ng eo r i
+BEU b eu
+BISEUSI b i s eu s i
+BOGGASSGO b o gg a d g o
+BOGGASSGO b o gg a ss g o
+BUEOK b u eo k
+BUGNYEOK b u g n yeo k
+BUNGEO b u ng eo
+BUSDAE b u dd ae
+BUSDAE b u s d ae
+CA c a
+CAM c a m
+CAMGGAE c a m gg ae
+CAMOE c a m oe
+CEMYEON c e m yeo n
+CEOMA c eo m a
+CEONEUL c eo n eu l
+CEU c eu
+CIMA c i m a
+CIMCAG c i m c a g
+COEGO c oe g o
+CURI c u r i
+CYEODABODA c yeo d a b o d a
+DA d a
+DAEDANHAE d ae d a n ae
+DAEDANHAE d ae d a n h ae
+DAETONGRYEONG d ae t o ng r yeo ng
+DAL d a l
+DANCE d a n c e
+DDA dd a
+DDAE dd ae
+DDAL dd a l
+DDANG dd a ng
+DDEDA dd e d a
+DDEU dd eu
+DDEUM dd eu m
+DDO dd o
+DEU d eu
+DEULPAN d eu l p a n
+E e
+EI e i
+EMI e m i
+EO eo
+EOBEOI eo b eo i
+EODDEOHGE eo dd eo k e
+EOI eo i
+EOJILDA eo j i l d a
+EOMEONI eo m eo n i
+EONDEOG eo n d eo g
+EOREUN eo r eu n
+EU eu
+EUDDEUM eu dd eu m
+EUSIDAEDA eu s i d ae d a
+EUSSEUGEUSSEUG eu ss eu g eu ss eu g
+GA g a
+GAB g a b
+GAD g a d
+GAE g ae
+GAEUL g a eu l
+GAEUL g ae u l
+GAEUNAE g a eu n ae
+GAG g a g
+GAGU g a g u
+GAL g a l
+GALGHIDA g a l g i d a
+GAM g a m
+GAN g a n
+GANG g a ng
+GANGAM g a n g a m
+GAORI g a o r i
+GESAL g e s a l
+GEU g eu
+GGA gg a
+GGACI gg a c i
+GGADAROBDA gg a d a r o b d a
+GGAEGA gg ae g a
+GGEU gg eu
+GGOYEOSSSEUBNIDA gg o yeo d s eu m m i d a
+GIREUM g i r eu m
+GOBBU g o bb u
+GOEIHADA g oe i a d a
+GOEIHADA g oe i h a d a
+GOESANGHADA g oe s a ng a d a
+GOESANGHADA g oe s a ng h a d a
+GOGI g o g i
+GWAHAG g wa a g
+GWAHAG g wa h a g
+GWASUWEON g wa s u weo n
+GWE g we
+GWEONRI g weo n r i
+GWEONSE g weo n s e
+GWI g wi
+GYEONGEO g yeo ng eo
+GYEONGSAEG g yeo ng s ae g
+GYEONHAE g yeo n ae
+GYEONHAE g yeo n h ae
+GYEOUL g yeo u l
+GYESAN g ye s a n
+GYOHOE g yo h oe
+GYOHOE g yo oe
+GYOYUG g yo yu g
+GYUJEONG g yu j eo ng
+GYUNDEUNG g yu n d eu ng
+GYUNDEUNGHADA g yu n d eu ng a d a
+GYUNDEUNGHADA g yu n d eu ng h a d a
+GYURYUL g yu r yu l
+HA h a
+HAEPARI h ae p a r i
+HAESBIC h ae d b i c
+HAESBIC h ae s b i c
+HAMONIKA h a m o n i k a
+HAMYEO h a m yeo
+HARU h a r u
+HEU h eu
+HOGU h o g u
+HUHOE h u oe
+HWENGHADA h oe ng a d a
+HWENGHADA h we ng h a d a
+HYEONG h yeo ng
+HYUSIG h yu s i g
+I i
+IB i b
+IEO i eo
+IMYEONSU i m yeo n s u
+INDEOG i n d eo g
+INSA i n s a
+IO i o
+IU i u
+IWI i wi
+IYI i yi
+JA j a
+JABA j a b a
+JAESAN j ae s a n
+JAGAYO j a g a yo
+JAJEONGEO j a j eo n g eo
+JAM j a m
+JAMULSOE j a m u l s oe
+JARANG j a r a ng
+JASIG j a s i g
+JEEO j e eo
+JEOGEOYO j eo g eo yo
+JEONGYANGSO j eo ng ya ng s o
+JEU j eu
+JIDA j i d a
+JIGEOB j i g eo b
+JJA jj a
+JJADA jj a d a
+JJAEYEOISSDA jj ae yeo i dd a
+JJAEYEOISSDA jj ae yeo i ss d a
+JJAM jj a m
+JJEU jj eu
+JJEUM jj eu m
+JJOCASSDA jj o c a dd a
+JJOCASSDA jj o c a ss d a
+JJUGEURIDA jj u g eu r i d a
+JOESONGHADA j oe s o ng a d a
+JOESONGHADA j oe s o ng h a d a
+JONGGYO j o ng g yo
+JUO j u o
+JWEBEORIDA j oe b eo r i d a
+JWEBEORIDA j we b eo r i d a
+JWI j wi
+JYEOSSDA j yeo dd a
+JYEOSSDA j yeo ss d a
+KA k a
+KATEU k a t eu
+KEOSSEOYO k eo ss eo yo
+KEU k eu
+KEUJIYO k eu j i yo
+KIDARI k i d a r i
+KOHEORI k o eo r i
+KOHEORI k o h eo r i
+MA m a
+MAB m a b
+MAD m a d
+MAEMANJIDA m ae m a n j i d a
+MAEUM m a eu m
+MAG m a g
+MAL m a l
+MAM m a m
+MAN m a n
+MANG m a ng
+MANGYEONGDAE m a n g yeo ng d ae
+MEDA m e d a
+MEOGEULGGE m eo g eu l gg e
+MEU m eu
+MIDEUM m i d eu m
+MISO m i s o
+MUSUL m u s u l
+NA n a
+NAJE n a j e
+NAMNYEOK n a m m yeo k
+NAMNYEOK n a m n yeo k
+NAMUIP n a m u i p
+NAMUWIE n a m u wi e
+NAMUWIRO n a m u wi r o
+NARA n a r a
+NEOMU n eo m u
+NEU n eu
+NORYEOGGA n o r yeo g g a
+O o
+OBBA o bb a
+OCON o c o n
+OE oe
+OECIM oe c i m
+OEGUGMAL oe g u g m a l
+OEMO oe m o
+OI o i
+OLRAGASSNI o l l a g a n n i
+OLRAWASSNI o l l a wa n n i
+ONUIDEULEUL o n u i d eu r eu l
+OO o o
+ORI o r i
+OU o u
+PA p a
+PAE p ae
+PAENGI p ae ng i
+PARI p a r i
+PEU p eu
+PIDI p i d i
+PYEONGYANG p yeo ng ya ng
+RA r a
+RAGJE r a g j e
+REU r eu
+RIBAL r i b a l
+RIBONG r i b o ng
+RIBYEOL r i b yeo l
+RICI r i c i
+RISIG r i s i g
+RIYONG r i yo ng
+RORYEOGJA r o r yeo g j a
+RYANGGOG r ya ng g o g
+RYANGSIM r ya ng s i m
+RYEMUL r ye m u l
+RYEOGGI r yeo g g i
+RYEU r ye u
+RYEYI r ye yi
+RYORI r yo r i
+RYUYI r yu yi
+SA s a
+SAHEUDNAL s a eu n n a l
+SAHEUDNAL s a h eu d n a l
+SARAM s a r a m
+SARANG s a r a ng
+SEDA s e d a
+SEOJI s eo j i
+SEU s eu
+SOYONG s o yo ng
+SSA ss a
+SSADA ss a d a
+SSAUM ss a u m
+SSEU ss eu
+SSEUMBAGWI ss eu m b a g wi
+SSIREUM ss i r eu m
+SSODAJIDA ss o d a j i d a
+SSOEDA ss oe d a
+SSOPA ss o p a
+SSUDA ss u d a
+SSYIUDA ss yi u d a
+SUSU s u s u
+SWIS s wi s
+TA t a
+TAL t a l
+TEU t eu
+TEUJIB t eu j i b
+TEUNTEUNHI t eu n t eu n h i
+TEUNTEUNHI t eu n t eu n i
+TEUREMEORI t eu r e m eo r i
+U u
+UAE u ae
+UE u e
+UJEOM u j eo m
+UJJEOM u jj eo m
+UO u o
+URI u r i
+USAN u s a n
+UYI u yi
+UYU u yu
+WA wa
+WAE wae
+WAEGUG wae g u g
+WAENOM wae n o m
+WAESOHWA wae s o h wa
+WAESOHWA wae s o wa
+WAHAE wa ae
+WAHAE wa h ae
+WANRYO wa n r yo
+WARYU wa r yu
+WAU wa u
+WE we
+WECIM we c i m
+WENGEOL we n g eo l
+WEO weo
+WEONAG weo n a g
+WEONDONG weo n d o ng
+WEONJOG weo n j o g
+WEONSU weo n s u
+WI wi
+WIBYEONG wi b yeo ng
+WIHEOM wi eo m
+WIHEOM wi h eo m
+WIJUNG wi j u ng
+WISAENG wi s ae ng
+YA ya
+YADEULYADEUL ya d eu l ya d eu l
+YADEULYADEUL ya d eu r ya d eu l
+YAE yae
+YAE ye
+YAEDEULA yae d eu r a
+YAEYA yae ya
+YAGU ya g u
+YANGGI ya ng g i
+YASIG ya s i g
+YAYU ya yu
+YE ye
+YECEUG ye c eu g
+YEO yeo
+YEONGHYI yeo ng h yi
+YEONGI yeo n g i
+YEONGU yeo n g u
+YEONGYANG yeo ng ya ng
+YEOREUM yeo r eu m
+YEOYA yeo ya
+YEOYU yeo yu
+YESAN ye s a n
+YI yi
+YIGYEON yi g yeo n
+YIOE yi oe
+YISA yi s a
+YIYI yi yi
+YO yo
+YOGU yo g u
+YONGMAENG yo ng m ae ng
+YOWEON yo weo n
+YOYO yo yo
+YU yu
+YUCIWEON yu c i weo n
+YUHYI yu h yi
+YUHYI yu yi
+YUSAENGRYEOGRYANG yu s ae ng r yeo g r ya ng
+YUYE yu ye

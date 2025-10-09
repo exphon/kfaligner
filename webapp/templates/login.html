@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>로그인 — Korean Forced Aligner</title>
+    <style>
+      body { 
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; 
+        margin: 0; 
+        padding: 2rem; 
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .login-card { 
+        max-width: 420px; 
+        width: 100%;
+        padding: 2.5rem; 
+        background: white;
+        border-radius: 12px; 
+        box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      }
+      h1 { 
+        margin-top: 0; 
+        font-size: 1.8rem;
+        color: #333;
+        text-align: center;
+      }
+      .form-group { 
+        margin: 1.5rem 0; 
+      }
+      label { 
+        display: block; 
+        margin-bottom: 0.5rem; 
+        color: #555;
+        font-weight: 500;
+      }
+      input[type="text"], 
+      input[type="password"] { 
+        width: 100%; 
+        padding: 0.75rem; 
+        border: 1px solid #ddd; 
+        border-radius: 6px; 
+        font-size: 1rem;
+        box-sizing: border-box;
+        transition: border-color 0.3s;
+      }
+      input[type="text"]:focus, 
+      input[type="password"]:focus { 
+        outline: none;
+        border-color: #667eea;
+      }
+      .btn { 
+        width: 100%;
+        padding: 0.85rem; 
+        border-radius: 6px; 
+        background: #667eea; 
+        color: #fff; 
+        border: 0; 
+        cursor: pointer; 
+        font-size: 1rem;
+        font-weight: 600;
+        transition: background 0.3s;
+      }
+      .btn:hover { 
+        background: #5568d3; 
+      }
+      .flash { 
+        padding: 0.75rem; 
+        border-radius: 6px; 
+        margin-bottom: 1rem; 
+        font-size: 0.9rem;
+      }
+      .flash.error { 
+        background: #fee; 
+        border: 1px solid #fcc; 
+        color: #c33;
+      }
+      .flash.success { 
+        background: #efe; 
+        border: 1px solid #cfc; 
+        color: #3c3;
+      }
+      .flash.info { 
+        background: #eef; 
+        border: 1px solid #ccf; 
+        color: #33c;
+      }
+      .error-message {
+        color: #c33;
+        font-size: 0.85rem;
+        margin-top: 0.3rem;
+      }
+      .signup-link {
+        text-align: center;
+        margin-top: 1.5rem;
+        color: #666;
+      }
+      .signup-link a {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .signup-link a:hover {
+        text-decoration: underline;
+      }
+      .captcha-box {
+        background: #f8f9fa;
+        border: 2px solid #667eea;
+        border-radius: 8px;
+        padding: 1rem;
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 0.5rem;
+        font-family: 'Courier New', monospace;
+        letter-spacing: 0.1em;
+      }
+      .captcha-box .operator {
+        color: #667eea;
+        margin: 0 0.5rem;
+      }
+      input[type="number"] {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 1rem;
+        box-sizing: border-box;
+        transition: border-color 0.3s;
+      }
+      input[type="number"]:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-card">
+      <h1>🔐 Korean Forced Aligner</h1>
+      <p style="text-align: center; color: #888; margin-top: -0.5rem; margin-bottom: 1.5rem;">로그인</p>
+      
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+      {% endwith %}
+
+      <form method="post">
+        {{ form.hidden_tag() }}
+        
+        <div class="form-group">
+          {{ form.username.label }}
+          {{ form.username(class="form-control") }}
+          {% if form.username.errors %}
+            {% for error in form.username.errors %}
+              <div class="error-message">{{ error }}</div>
+            {% endfor %}
+          {% endif %}
+        </div>
+        
+        <div class="form-group">
+          {{ form.password.label }}
+          {{ form.password(class="form-control") }}
+          {% if form.password.errors %}
+            {% for error in form.password.errors %}
+              <div class="error-message">{{ error }}</div>
+            {% endfor %}
+          {% endif %}
+          <div style="text-align: right; margin-top: 0.5rem;">
+            <a href="{{ url_for('forgot_password') }}" style="font-size: 0.9rem; color: #667eea; text-decoration: none;">비밀번호를 잊으셨나요?</a>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>{{ form.captcha.label }} ({{ num1 }} + {{ num2 }} = ?)</label>
+          <div class="captcha-box">
+            {{ num1 }} <span class="operator">+</span> {{ num2 }} <span class="operator">=</span> <span style="color: #667eea;">?</span>
+          </div>
+          {{ form.captcha(class="form-control", type="number", placeholder="계산 결과를 입력하세요") }}
+          {% if form.captcha.errors %}
+            {% for error in form.captcha.errors %}
+              <div class="error-message">{{ error }}</div>
+            {% endfor %}
+          {% endif %}
+        </div>
+        
+        <div class="form-group">
+          {{ form.submit(class="btn") }}
+        </div>
+      </form>
+      
+      <div class="signup-link">
+        계정이 없으신가요? <a href="{{ url_for('signup') }}">회원가입</a>
+      </div>
+      
+      <!-- 게스트 계정 안내 -->
+      <div style="margin-top: 2rem; padding: 1.5rem; background: #e7f3ff; border-radius: 8px; border: 1px solid #b3d9ff;">
+        <h3 style="font-size: 1.1rem; color: #084298; margin-top: 0; margin-bottom: 1rem;">🎙️ Korean Forced Aligner란?</h3>
+        <p style="font-size: 0.95rem; color: #555; line-height: 1.6; margin: 0 0 1rem 0;">
+          한국어 음성 파일(WAV)과 전사 텍스트(TXT/LAB)를 자동으로 정렬하여 단어/음소 수준의 타임스탬프를 생성하는 도구입니다.
+          음성학 연구, 음성 합성(TTS), 음성 인식(ASR) 등에 활용할 수 있습니다.
+        </p>
+        
+        <div style="background: #fff; padding: 1rem; border-radius: 6px; margin-top: 1rem;">
+          <h4 style="font-size: 1rem; color: #0d6efd; margin-top: 0; margin-bottom: 0.8rem;">🔑 게스트 계정으로 바로 시작하기</h4>
+          <p style="font-size: 0.9rem; color: #666; margin: 0 0 0.8rem 0;">
+            회원가입 없이 바로 사용하고 싶으시다면 아래 계정으로 로그인하세요:
+          </p>
+          <div style="background: #f8f9fa; padding: 1rem; border-radius: 4px; border-left: 3px solid #0d6efd;">
+            <div style="margin-bottom: 0.5rem;">
+              <strong style="color: #333;">사용자명:</strong> 
+              <code style="background: #fff; padding: 0.2rem 0.6rem; border-radius: 3px; color: #d63384; font-weight: 600;">KAligner</code>
+            </div>
+            <div>
+              <strong style="color: #333;">비밀번호:</strong> 
+              <code style="background: #fff; padding: 0.2rem 0.6rem; border-radius: 3px; color: #d63384; font-weight: 600;">K@re@n</code>
+            </div>
+          </div>
+          <p style="font-size: 0.85rem; color: #999; margin: 0.8rem 0 0 0; font-style: italic;">
+            💡 개인 계정을 원하시면 회원가입을 권장합니다.
+          </p>
+        </div>
+        
+        <div style="margin-top: 1rem; padding: 0.8rem; background: #fff3cd; border-radius: 4px; border-left: 3px solid #ffc107;">
+          <p style="font-size: 0.9rem; color: #856404; margin: 0;">
+            ⚠️ <strong>개인정보 보호:</strong> ZIP 다운로드 후 업로드된 파일은 서버에서 자동으로 삭제됩니다.
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/*
+!tmp/.gitkeep
+
+# Uploaded files
+webapp/data/uploads/*
+!webapp/data/uploads/.gitkeep
+webapp/data/jobs/*
+!webapp/data/jobs/.gitkeep
+
+# Database
+webapp/data/*.db
+
+# Server logs and PIDs
+*.log
+*.pid
+
+# HTK archive
+HTK-3.4.1.tar
+
+# Test outputs
+test/*.TextGrid
+test/*.tg
+
+# Local config
+kfaligner_http.conf

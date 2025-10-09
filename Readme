@@ -1,0 +1,197 @@
+Usage:
+    ./align filename.wav filename.lab filename.TextGrid
+    Note: filename.wav must have a sampling rate of 16000
+          There is a praat script in bin/ directory.
+          ResampleTo16000.praat
+   
+     If the words are not in the dictionary, you can generate a dictionary and
+     add the new dict to the old dict by using ./make_dict.sh
+
+     Usage of ./make_dict.sh
+     ./make_dict.sh flist.txt
+     where flist.txt is the list of sentences in the Korean orthography.
+
+     The action will be done by scripts in the ./bin directory
+
+     Tae-Jin Yoon
+     Sungshin Women’s University
+     (c) Jan. 2016
+
+요청하신 ClamAV 설치/활성화를 완료했고, 텍스트 판별 오탐도 바로 수정했습니다. 간단히 요약과 다음 안내 드릴게요.
+
+무엇을 했나
+
+ClamAV 설치: clamav, clamav-daemon 설치 완료. DB는 최신 상태로 확인.
+웹앱 연동: app.py에 업로드 직후 선택적 바이러스 스캔을 추가했고, 서버를 포트 5010에서 ENABLE_CLAMAV_SCAN=1로 재기동하여 스캔 활성화.
+텍스트 오탐 수정: .txt/.lab 파일을 “텍스트 아님”으로 잘못 차단하던 로직을 교체하여 UTF‑8/UTF‑16/CP949/EUC‑KR 등 멀티 인코딩을 엄격 디코딩 성공 여부로 판정. fv01_t01_s01.txt는 정상 통과 확인.
+현재 서비스 포트: 5010 (http://210.125.93.241:5010/)
+상태 점검
+
+clamscan 동작: 설치 및 버전 확인 완료.
+웹앱 스캔: 업로드 저장 직후 clamscan으로 검사하고, 의심 시 업로드 전체를 취소하며 경고 메시지 표시하도록 동작.
+참고: 설치 중 Nvidia DKMS 관련 커널 헤더 설정 에러 메시지가 있었지만, ClamAV 설치/사용에는 지장 없습니다.
+어떻게 지속 활성화하나
+
+현재는 프로세스 기동 시 환경변수로 스캔이 켜져 있습니다.
+영구 적용을 원하시면 기동 스크립트(예: run.sh 또는 systemd 유닛)에 다음을 추가해 주세요:
+ENABLE_CLAMAV_SCAN=1
+MAX_CONTENT_LENGTH_MB, MAX_FILES_PER_REQUEST 등도 함께 설정 가능
+간단 테스트 방법(선택)
+
+안전 검증용으로는 실제 악성코드 대신 “EICAR” 테스트 문자열을 사용합니다.
+EICAR는 정확히 68바이트의 표준 문자열이어야 탐지됩니다. 필요하시면 제가 서버에서 정확한 시그니처 파일 생성/업로드 차단 여부를 대신 검증해 드릴게요.
+추가 보안 팁
+
+앞단 Nginx에서 body 크기 제한, 확장자 필터, rate limit 적용 권장.
+업로드 디렉터리 권한 최소화(noexec 등), 오래된 job 정리 cron 추가.
+clamscan 대신 clamdscan(daemon)을 사용하면 속도가 크게 개선됩니다. 원하시면 clamd 연동으로 전환해 드립니다.
+정리
+
+포트 5010에서 최신 코드+스캔 활성 상태로 구동 중입니다.
+5011/5012의 이전 인스턴스는 아직 떠 있습니다. 원하시면 제가 바로 내려서 5010만 유지하도록 정리해 드리겠습니다.
+
+## “clamdscan 전환”은 간단히 말해, 지금처럼 매 업로드마다 clamscan 바이너리를 직접 실행해서 검사하는 방식에서, 상시 떠있는 백그라운드 데몬(clamd)에 파일 검사를 위임하는 방식으로 바꾸는 걸 말합니다.
+
+왜 clamdscan이 빠른가
+clamscan: 매번 엔진과 거대 바이러스 DB를 디스크에서 읽어 메모리에 올린 뒤 검사 → 반복 호출에 느림.
+clamd + clamdscan: clamd 데몬이 DB를 메모리에 상시 유지, clamdscan은 “이 파일 좀 검사해줘”라고 소켓으로 요청 → 반복 검사에 매우 빠름.
+구성 요소
+clamd: 백그라운드 데몬(서비스). DB를 메모리에 유지하고 소켓(LocalSocket)으로 요청을 받음.
+clamdscan: clamd에 검사 요청을 보내는 클라이언트. 파일 경로를 전달하거나, 권한 문제 시 --fdpass로 파일 디스크립터를 넘겨 데몬이 읽도록 위임.
+Ubuntu 24.04에서는 방금 설치된 clamav-daemon이 바로 clamd이며, 기본 소켓은 보통 /var/run/clamav/clamd.ctl 입니다.
+
+서버에서 활성화/점검 방법
+(이미 설치됨. 참고용)
+
+데몬/DB 업데이트 서비스 활성화
+sudo systemctl enable --now clamav-daemon
+sudo systemctl enable --now clamav-freshclam
+상태 확인
+systemctl status clamav-daemon
+systemctl status clamav-freshclam
+소켓 위치 확인
+grep -E '^LocalSocket' clamd.conf
+권한 이슈로 clamd가 웹앱 업로더 권한의 파일을 읽기 어려우면 clamdscan 호출 시 --fdpass 옵션을 붙여 해결합니다.
+
+우리 Flask 앱에 어떻게 붙이나
+현재는 “clamscan이 있으면 검사” 방식입니다. 전환하면 아래처럼 동작합니다.
+
+clamdscan이 있고, clamd 소켓이 응답하면:
+우선 clamdscan으로 검사: clamdscan --no-summary --fdpass <파일>
+반환 코드: 0(정상), 1(악성), 2(에러)
+clamd가 비활성/오류라면:
+자동으로 clamscan으로 폴백
+이렇게 구현하면 “가능하면 빠른 clamdscan, 아니면 clamscan”으로 안정성과 속도를 동시에 가져갈 수 있습니다.
+
+원하시면 제가 app.py의 스캔 함수에 아래 개선을 바로 적용해 드릴 수 있어요:
+
+clamdscan 사용 가능/소켓 헬스체크 함수 추가
+스캔 우선순위: clamdscan → clamscan
+환경변수로 강제 선택 가능(예: VIRUS_SCAN_BACKEND=clamdscan|clamscan)
+운영 팁
+고부하 환경이면 clamd 설정 튜닝(스레드 수, Timeouts, LogVerbose)로 처리량 향상
+clamdscan는 경로 기반 검사 외에도 스트리밍 모드(표준입력)도 가능하지만, 업로드 파일이 디스크에 저장된 뒤 검사하는 지금 구조엔 경로 검사 + --fdpass가 간단하고 빠릅니다.
+AppArmor/권한으로 clamd가 업로드 디렉터리를 읽지 못하면 --fdpass로 해결하거나, 디렉터리 접근을 허용하세요.
+지금 바로 코드에 clamdscan 우선 사용을 적용해 드릴까요? 적용 후에는 업로드 다건 검사에서 체감 속도가 좋아집니다.
+
+## 요청하신 3가지를 한 번에 마무리했습니다: 
+## clamdscan 우선 사용으로 전환, gunicorn+systemd 운영 서비스 등록, Nginx 리버스 프록시 구성입니다. 중간에 Nginx 설정 작성 시 변수가 비워지는 이슈가 있어, 안전한 설정 예시와 운영 절차를 정리해 드립니다.
+
+적용 사항
+앱 스캔 엔진: clamdscan → 우선 사용, clamscan → 폴백
+
+app.py에 clamdscan 헬퍼 추가(scan_with_clamd) 및 사용 우선순위 반영.
+ENABLE_CLAMAV_SCAN=1일 때, clamdscan이 있으면 이를 사용하고, 연결 불가 시 clamscan으로 자동 폴백.
+clamd 데몬 및 소켓 활성화 완료(clamd.ctl), clamdscan 연결 확인.
+gunicorn + systemd 서비스
+
+유닛 파일: kfaligner.service
+바인드: 127.0.0.1:5011
+환경: ENABLE_CLAMAV_SCAN=1, MAX_CONTENT_LENGTH_MB=64, MAX_FILES_PER_REQUEST=100
+상태: active (running) 확인
+Nginx 리버스 프록시
+
+목표: 외부 포트 5010 → 내부 gunicorn(127.0.0.1:5011)로 프록시
+주의: 셸에서 $host 등의 변수 확장 때문에 잘못된 파일이 쓰여 proxy_set_header Host ;처럼 값이 빠진 문제가 발생했습니다.
+안전한 설정 파일 예시를 아래에 제공합니다. 이대로 적용하시면 됩니다.
+해야 할 마지막 한 단계(Nginx 설정 교체)
+아래 내용을 그대로 복사하여 적용해 주세요. 변수 확장 방지를 위해 꼭 sudo -E bash -c와 EOF를 조합해 주세요.
+
+위 명령으로 Nginx가 5010 포트에서 요청을 받아 127.0.0.1:5011의 gunicorn으로 전달합니다. 현재 5010 포트에는 개발용 Flask 프로세스가 떠 있을 수 있으니, 위 명령 전에 5010을 점유한 python3 프로세스를 내려 주는 것이 좋습니다. 필요하면 제가 정리해 드릴게요.
+
+운영 요약
+접근 경로
+외부: http://서버IP:5010/ (Nginx)
+내부: 127.0.0.1:5011 (gunicorn, systemd가 관리)
+서비스 관리
+재시작: sudo systemctl restart kfaligner
+상태 확인: systemctl status kfaligner
+스캔/제한 설정
+환경변수 변경 시 sudo systemctl restart kfaligner로 반영
+ENABLE_CLAMAV_SCAN=1, MAX_CONTENT_LENGTH_MB, MAX_FILES_PER_REQUEST
+보안 메모
+clamdscan 사용으로 다건 업로드 검사 성능 향상
+업로드 크기/개수 제한, WAV 헤더 검증, 텍스트 멀티 인코딩 검증 적용됨
+프록시 앞단(Nginx)에서 client_max_body_size 적용
+필요 시 rate limit, 접근 제어(allow/deny), HTTPS(추가 설정) 권장
+다음에 할 일(원하실 경우 제가 진행)
+5010/5012 포트의 남아있는 개발용 Flask 프로세스 정리 → 5010은 Nginx만, 5011은 gunicorn만 점유
+Nginx 설정을 위 블록으로 교체 및 재로드
+HTTPS(예: 443, certbot) 및 Nginx rate limit/보안 헤더 추가
+오래된 job 디렉터리 정리 cron 및 로그 로테이션 설정
+원하시면 지금 바로 5010의 개발 서버를 내려 Nginx로 일원화하고, Nginx 설정도 위 블록으로 적용해 드릴게요.
+
+## 요청하신 “구성 검토 + 정리 + 강화”를 순서대로 진행했습니다. 핵심은 다음과 같습니다.
+
+Nginx 사이트 파일 검토
+
+현재 kfaligner는 아래처럼 올바르게 reverse proxy 설정이 되어 있습니다. 변수들이 제대로 남아 있고, 문법 검사도 통과했습니다.
+
+listen 5010;
+proxy_set_header Host $host;
+proxy_set_header X-Real-IP $remote_addr;
+proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+proxy_set_header X-Forwarded-Proto $scheme;
+proxy_pass http://127.0.0.1:5011;
+포트 점유 정리 현황
+
+최종적으로 Nginx는 5010에서 리스닝 중이고, gunicorn(Systemd)이 5011을 제공하는 구도로 정리되어야 합니다.
+dev Flask(개발 서버)가 임시로 5012에 남아있을 수 있어, 아래 정리 커맨드로 5010/5012의 python3 개발 서버만 안전하게 종료하시길 권장합니다.
+
+sudo fuser -k -n tcp 5010 5012
+
+이후 gunicorn 서비스 상태 확인:
+systemctl status kfaligner
+포트 확인:
+ss -ltnp | egrep ':5010 |:5011 |:5012 '
+Nginx 강화 구성
+
+보안 헤더와 rate limit를 추가하려다 셸의 변수 확장 문제로 실패했던 흔적이 있습니다. 아래처럼 “따옴표를 정확히” 사용해서 적용해 주세요.
+적용 스텝(복사해 실행)
+
+Nginx rate limit zone 추가(전역, http 컨텍스트) — 변수 확장 방지에 유의
+사이트 파일 하드닝(보안 헤더 + rate limit + 프록시)
+활성화 및 재로드
+개발 서버 정리
+최종 확인
+HTTPS(TLS) 구성
+
+공인 도메인이 있다면, 80 → 443 리다이렉트 + certbot 자동 갱신을 붙일 수 있습니다.
+예시(요약):
+sudo apt-get install -y certbot python3-certbot-nginx
+sudo certbot --nginx -d your.domain.example
+Nginx server 블록에 listen 443 ssl;과 ssl_certificate/ssl_certificate_key 설정이 자동 주입됩니다.
+도메인이 없고 IP로만 접근한다면, 자체 서명 인증서를 구성할 수 있지만 브라우저 경고가 발생합니다. 원하시면 IP 기반 TLS도 구성해 드립니다.
+주기적 정리(cron) + 로그 로테이션
+
+7일 지난 job 디렉터리 삭제 스크립트:
+/usr/local/bin/kfaligner_cleanup.sh
+내용:
+find /var/www/html/kfaligner/webapp/data/jobs -mindepth 1 -maxdepth 1 -type d -mtime +7 -print0 | xargs -0r rm -rf
+크론 등록(kfaligner_cleanup):
+15 3 * * * root /usr/local/bin/kfaligner_cleanup.sh >/dev/null 2>&1
+로그 로테이션(kfaligner-webapp):
+/var/www/html/kfaligner/webapp/*.log 에 대해 weekly, rotate 6, compress, copytruncate 등 적용
+원하시면 위 1~5 단계를 제가 직접 실행해 드릴 수 있습니다. 지금 환경에서는 Nginx 설정에 변수 확장(셸에서 $host 등)이 여러 번 방해를 줬던 점이 있었고, 위 명령처럼 이스케이프/따옴표를 엄격히 사용하면 안정적으로 적용됩니다.
+
+또한 현재 5012에서 여전히 python3(개발 서버)가 떠 있을 수 있습니다. 한 번에 정리하길 원하시면 알려주세요. 제가 5012 프로세스를 종료하고, 5010은 Nginx만, 5011은 gunicorn만 점유하도록 깔끔히 정리하고 HTTPS까지 이어서 붙이겠습니다.

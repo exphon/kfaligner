@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Korean Forced Aligner</title>
+    <style>
+      body { 
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; 
+        margin: 2rem; 
+        font-size: 18px;
+      }
+      .card { 
+        max-width: 900px; 
+        margin: 0 auto; 
+        padding: 3rem; 
+        border: 1px solid #ddd; 
+        border-radius: 8px; 
+      }
+      .header { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        margin-bottom: 2.5rem; 
+        padding-bottom: 1.5rem;
+        border-bottom: 2px solid #e0e0e0;
+      }
+      .user-info { color: #666; font-size: 1rem; }
+      .logout-btn { 
+        padding: 0.5rem 1rem; 
+        background: #dc3545; 
+        color: white; 
+        text-decoration: none; 
+        border-radius: 4px; 
+        font-size: 0.95rem; 
+      }
+      .logout-btn:hover { background: #c82333; }
+      h1 { 
+        margin-top: 0; 
+        font-size: 2rem;
+      }
+      .row { 
+        margin: 2rem 0; 
+        padding: 1.5rem 0;
+      }
+      label {
+        display: block;
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: #333;
+      }
+      .hint { 
+        color: #666; 
+        font-size: 1rem; 
+        margin-top: 1rem;
+        line-height: 1.6;
+      }
+      .btn { 
+        display: inline-block; 
+        padding: 1rem 2rem; 
+        border-radius: 6px; 
+        background: #0d6efd; 
+        color: #fff; 
+        text-decoration: none; 
+        border: 0; 
+        cursor: pointer; 
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-top: 1.5rem;
+      }
+      .btn:hover { background: #0b5ed7; }
+      .btn:disabled { background: #9bbdf7; cursor: not-allowed; }
+      .flash { 
+        padding: 1rem 1.2rem; 
+        background: #fff7cc; 
+        border: 1px solid #f0e2a2; 
+        border-radius: 6px; 
+        margin-bottom: 1.5rem; 
+        font-size: 1rem;
+      }
+      .flash.success { background: #d4edda; border-color: #c3e6cb; color: #155724; }
+      .flash.error { background: #f8d7da; border-color: #f5c6cb; color: #721c24; }
+      .flash.info { background: #d1ecf1; border-color: #bee5eb; color: #0c5460; }
+      input[type="file"] { 
+        width: 100%; 
+        padding: 1.5rem;
+        font-size: 1rem;
+        border: 2px dashed #0d6efd;
+        border-radius: 8px;
+        background: #f8f9fa;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+      input[type="file"]:hover {
+        background: #e9ecef;
+        border-color: #0b5ed7;
+      }
+      footer { 
+        margin-top: 3rem; 
+        padding-top: 2rem;
+        color: #777; 
+        font-size: 1rem; 
+        text-align: center; 
+        border-top: 1px solid #e0e0e0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="header">
+        <h1>🎙️ Korean Forced Aligner</h1>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <span class="user-info">👤 {{ username }}</span>
+          <a href="{{ url_for('logout') }}" class="logout-btn">로그아웃</a>
+        </div>
+      </div>
+      
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+      {% endwith %}
+
+      <form action="{{ url_for('align') }}" method="post" enctype="multipart/form-data">
+        <div class="row">
+          <label>📂 WAV/TXT/LAB 파일 업로드 (여러 개 선택 가능)</label>
+          <input type="file" name="files" accept=".wav,.txt,.lab" multiple required />
+          <div class="hint">
+            💡 <strong>중요:</strong> 같은 이름의 WAV 파일과 TXT/LAB 파일이 모두 있어야 정렬이 진행됩니다.<br>
+            예시: <code>sample.wav</code> + <code>sample.txt</code> (또는 <code>sample.lab</code>)
+          </div>
+        </div>
+        <div class="row">
+          <button class="btn" type="submit">🚀 정렬 실행</button>
+        </div>
+      </form>
+      
+      <!-- 기능 설명 섹션 -->
+      <div style="margin-top: 3rem; padding-top: 2rem; border-top: 2px solid #e0e0e0;">
+        <h2 style="font-size: 1.5rem; color: #333; margin-bottom: 1.5rem;">📖 Korean Forced Aligner 소개</h2>
+        
+        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+          <h3 style="font-size: 1.2rem; color: #0d6efd; margin-top: 0;">🎯 주요 기능</h3>
+          <ul style="line-height: 2; color: #555; margin: 0;">
+            <li><strong>음성-텍스트 자동 정렬:</strong> 음성 파일(WAV)과 전사 텍스트(TXT/LAB)를 자동으로 정렬하여 단어/음소 수준의 타임스탬프를 생성합니다.</li>
+            <li><strong>한국어 특화:</strong> 한국어 음성 데이터에 최적화된 강제 정렬(Forced Alignment) 알고리즘을 사용합니다.</li>
+            <li><strong>TextGrid 출력:</strong> Praat에서 바로 사용 가능한 TextGrid 형식으로 결과를 제공합니다.</li>
+            <li><strong>일괄 처리:</strong> 여러 파일을 한 번에 업로드하여 자동으로 처리할 수 있습니다.</li>
+          </ul>
+        </div>
+        
+        <div style="background: #fff3cd; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #ffc107; margin-bottom: 1.5rem;">
+          <h3 style="font-size: 1.2rem; color: #856404; margin-top: 0;">📋 사용 방법</h3>
+          <ol style="line-height: 2; color: #856404; margin: 0;">
+            <li><strong>파일 준비:</strong> 같은 이름의 WAV 파일과 TXT(또는 LAB) 파일을 준비합니다.
+              <br><small style="color: #6c757d;">예: <code>sample.wav</code> + <code>sample.txt</code></small>
+            </li>
+            <li><strong>파일 선택:</strong> 위의 파일 선택 영역에서 모든 파일을 선택합니다 (Ctrl+클릭 또는 Shift+클릭).</li>
+            <li><strong>정렬 실행:</strong> "🚀 정렬 실행" 버튼을 클릭하여 처리를 시작합니다.</li>
+            <li><strong>결과 확인:</strong> 처리가 완료되면 결과 페이지에서 각 파일의 성공 여부를 확인할 수 있습니다.</li>
+            <li><strong>다운로드:</strong> 
+              <ul style="margin-top: 0.5rem;">
+                <li>개별 TextGrid 파일 다운로드 가능</li>
+                <li>📦 ZIP으로 모든 파일 일괄 다운로드 가능 (원본 + 결과)</li>
+              </ul>
+            </li>
+          </ol>
+        </div>
+        
+        <div style="background: #e7f3ff; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #0d6efd;">
+          <h3 style="font-size: 1.2rem; color: #084298; margin-top: 0;">💡 활용 분야</h3>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+            <div>
+              <strong style="color: #0d6efd;">🎓 음성학 연구</strong>
+              <p style="font-size: 0.95rem; color: #555; margin: 0.5rem 0 0 0;">음소 및 운율 분석</p>
+            </div>
+            <div>
+              <strong style="color: #0d6efd;">🗣️ 음성 합성</strong>
+              <p style="font-size: 0.95rem; color: #555; margin: 0.5rem 0 0 0;">TTS 학습 데이터 생성</p>
+            </div>
+            <div>
+              <strong style="color: #0d6efd;">🎤 음성 인식</strong>
+              <p style="font-size: 0.95rem; color: #555; margin: 0.5rem 0 0 0;">ASR 모델 학습 준비</p>
+            </div>
+            <div>
+              <strong style="color: #0d6efd;">📚 언어 교육</strong>
+              <p style="font-size: 0.95rem; color: #555; margin: 0.5rem 0 0 0;">발음 분석 및 교정</p>
+            </div>
+          </div>
+        </div>
+        
+        <div style="margin-top: 1.5rem; padding: 1rem; background: #f1f1f1; border-radius: 6px; font-size: 0.95rem; color: #666;">
+          <strong>⚠️ 참고사항:</strong>
+          <ul style="margin: 0.5rem 0 0 0; padding-left: 1.5rem;">
+            <li>WAV 파일은 16kHz 모노 포맷을 권장합니다.</li>
+            <li>텍스트 파일은 UTF-8 인코딩을 권장합니다 (CP949, EUC-KR도 지원).</li>
+            <li>한글 텍스트는 자동으로 로마자로 변환되어 처리됩니다.</li>
+            <li>ZIP 다운로드 후 서버의 파일은 자동으로 삭제됩니다 (프라이버시 보호).</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <footer>
+      Korean Forced Aligner — 음성-텍스트 자동 정렬 시스템<br>
+      <small style="color: #999;">Powered by HTK (Hidden Markov Model Toolkit)</small>
+    </footer>
+  </body>
+  </html>
