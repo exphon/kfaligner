@@ -1,0 +1,15 @@
+# Python package dependencies for Korean Forced Aligner
+
+# Core dependencies
+numpy>=1.19.0
+
+# Audio processing (optional, for preprocessing)
+# scipy>=1.5.0
+# librosa>=0.8.0
+
+# Text processing
+# hangul-utils>=0.1.0
+
+# Note: HTK (Hidden Markov Model Toolkit) must be installed separately
+# Download from: http://htk.eng.cam.ac.uk/
+# HTK is required for the forced alignment functionality

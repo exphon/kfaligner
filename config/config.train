@@ -1,0 +1,27 @@
+# HTK Configuration for training
+# Korean Forced Aligner
+
+# HMM prototype configuration
+TARGETKIND = MFCC_0_D_A
+
+# Training parameters
+HPARM: TARGETKIND = MFCC_0_D_A
+HPARM: TARGETRATE = 100000.0
+HPARM: WINDOWSIZE = 250000.0
+HPARM: USEHAMMING = T
+HPARM: PREEMCOEF = 0.97
+HPARM: NUMCHANS = 26
+HPARM: NUMCEPS = 12
+HPARM: CEPLIFTER = 22
+HPARM: ENORMALISE = T
+HPARM: ZMEANSOURCE = T
+
+# Number of states in HMM (3-state left-to-right model)
+NUMSTATES = 5
+
+# State transition matrix type
+TRANSTYPE = SIMPLE
+
+# Output probability distribution type  
+STREAMINFO = 1 39
+DURTYPE = NULLD

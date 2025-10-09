@@ -1,0 +1,23 @@
+# HTK Configuration for HVite (forced alignment)
+# Korean Forced Aligner
+
+# Enable pruning for faster alignment
+PRUNING = 250.0
+
+# Beam width for pruning
+BEAMWIDTH = 200.0
+
+# Language model scale factor
+LMSCALE = 15.0
+
+# Word insertion penalty
+WDPENALTY = 0.0
+
+# Maximum number of active models
+MAXACTIVE = 0
+
+# Allow cross-word triphones
+ALLOWCXTEXP = T
+
+# Force alignment mode
+FORCEOUT = T

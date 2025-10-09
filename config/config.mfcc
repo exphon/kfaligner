@@ -1,0 +1,38 @@
+# HTK Configuration for MFCC feature extraction
+# Korean Forced Aligner
+
+# Source format
+SOURCEFORMAT = WAV
+
+# Target kind - MFCC with energy, deltas and acceleration coefficients
+TARGETKIND = MFCC_0_D_A
+
+# Target rate - 10ms frame rate (100 frames per second)
+TARGETRATE = 100000.0
+
+# Save compressed files
+SAVECOMPRESSED = T
+
+# Window size - 25ms
+WINDOWSIZE = 250000.0
+
+# Use Hamming window
+USEHAMMING = T
+
+# Pre-emphasis coefficient
+PREEMCOEF = 0.97
+
+# Number of filter bank channels
+NUMCHANS = 26
+
+# Number of cepstral coefficients
+NUMCEPS = 12
+
+# Cepstral liftering parameter
+CEPLIFTER = 22
+
+# Energy normalization
+ENORMALISE = T
+
+# Zero mean source
+ZMEANSOURCE = T
