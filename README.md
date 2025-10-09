@@ -159,6 +159,13 @@ To contribute to this project:
 
 This project is open source and available under the MIT License.
 
+## Documentation
+
+- 📖 **[Getting Started Guide](GETTING_STARTED.md)** - Step-by-step tutorial for your first alignment
+- 🏗️ **[Architecture Documentation](ARCHITECTURE.md)** - Technical details and system design
+- 🤝 **[Contributing Guidelines](CONTRIBUTING.md)** - How to contribute to the project
+- 📋 **[Project Summary](PROJECT_SUMMARY.md)** - Complete overview of what's implemented
+
 ## Acknowledgments
 
 - Built with Flask web framework
