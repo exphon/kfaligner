@@ -60,6 +60,21 @@ This script will:
 2. Install dependencies
 3. Start the web application
 
+### Docker Deployment (Recommended)
+
+If you have Docker installed, you can run the application in a container:
+
+```bash
+# Build and run with docker-compose
+docker-compose up
+
+# Or build and run manually
+docker build -t kfaligner .
+docker run -p 5000:5000 kfaligner
+```
+
+Then access the application at http://localhost:5000
+
 ### Manual Setup
 
 #### Running the Web Application
