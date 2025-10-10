@@ -383,8 +383,8 @@ client_max_body_size 128M;
 ## 👤 저자
 
 **Tae-Jin Yoon**  
-Sungshin Women's University  
-© January 2016
+Sungshin Women's University 
+© January 2016-2025
 
 ## 📧 문의
 
