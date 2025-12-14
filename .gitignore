@@ -41,6 +41,7 @@ webapp/data/*.db
 
 # Server logs and PIDs
 *.log
+*.log.*
 *.pid
 
 # HTK archive

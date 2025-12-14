@@ -20,22 +20,6 @@ import subprocess
 import unicodedata
 
 
-VOWEL_PHONES = {
-	'a', 'ae', 'ya', 'yae', 'eo', 'e', 'yeo', 'ye',
-	'o', 'wa', 'wae', 'oe', 'yo', 'u', 'wo', 'we', 'wi',
-	'yu', 'eu', 'yi', 'i'
-}
-
-
-def _is_vowel(phone):
-	if not phone:
-		return False
-	low = phone.lower()
-	if low in VOWEL_PHONES:
-		return True
-	return low[0] in {'a', 'e', 'i', 'o', 'u', 'w', 'y'}
-
-
 def prep_wav(orig_wav, out_wav, sr_override, wave_start, wave_end):
 	global sr_models
 
@@ -102,31 +86,6 @@ def _read_text_any_encoding(path):
 		return s
 	except Exception:
 		return ''
-
-
-def _build_display_map(original_path, romanized_path):
-	display = {}
-	if not (os.path.exists(original_path) and os.path.exists(romanized_path)):
-		return display
-
-	try:
-		orig_lines = _read_text_any_encoding(original_path).splitlines()
-		roman_lines = _read_text_any_encoding(romanized_path).splitlines()
-	except Exception:
-		return display
-
-	for o_line, r_line in zip(orig_lines, roman_lines):
-		o_tokens = [tok for tok in re.split(r'\s+', o_line.strip()) if tok]
-		r_tokens = [tok.upper() for tok in re.split(r'\s+', r_line.strip()) if tok]
-
-		if len(o_tokens) != len(r_tokens):
-			continue
-
-		for o_tok, r_tok in zip(o_tokens, r_tokens):
-			if r_tok:
-				display.setdefault(r_tok, o_tok)
-
-	return display
 
 
 def prep_mlf(trsfile, mlffile, word_dictionary, surround, between):
@@ -251,123 +210,7 @@ def readAlignedMLF(mlffile, SR, wave_start):
 	return separated_ret
 
 
-def _build_syllable_intervals(word_alignments):
-	syllables = []
-	for wrd in word_alignments:
-		if len(wrd) <= 1:
-			continue
-		label = wrd[0]
-		phones = wrd[1:]
-		if label in {'sil', 'sp'}:
-			syllables.append([label.upper(), phones[0][1], phones[-1][2]])
-			continue
-
-		i = 0
-		n = len(phones)
-		while i < n:
-			syl_phones = []
-			syl_start = phones[i][1]
-
-			while i < n and not _is_vowel(phones[i][0]):
-				syl_phones.append(phones[i])
-				i += 1
-				if i < n and _is_vowel(phones[i][0]):
-					break
-				if i >= n:
-					break
-
-			if i < n and _is_vowel(phones[i][0]):
-				syl_phones.append(phones[i])
-				i += 1
-			else:
-				if syl_phones:
-					syllables.append([
-						''.join(p[0] for p in syl_phones if p[0] not in {'sp', 'sil'}).upper() or label.upper(),
-						syl_start,
-						syl_phones[-1][2]
-					])
-				break
-
-			consonants = []
-			while i < n and not _is_vowel(phones[i][0]):
-				consonants.append(phones[i])
-				i += 1
-
-			if i < n and consonants:
-				carry = consonants[-1:]
-				attach = consonants[:-1]
-				syl_phones.extend(attach)
-				i -= len(carry)
-			else:
-				syl_phones.extend(consonants)
-
-			syl_end = syl_phones[-1][2]
-			syl_label = ''.join(p[0] for p in syl_phones if p[0] not in {'sp', 'sil'}).upper()
-			if not syl_label:
-				syl_label = label.upper()
-			syllables.append([syl_label, syl_start, syl_end])
-
-	return syllables
-
-
-def _build_utterance_intervals(word_alignments, display_map=None):
-	def _display(label):
-		if display_map:
-			return display_map.get(label, display_map.get(label.upper(), display_map.get(label.lower(), label)))
-		return label
-
-	utterances = []
-	current_words = []
-	current_start = None
-	pending_sp_start = None
-
-	for wrd in word_alignments:
-		if len(wrd) <= 1:
-			continue
-		label = wrd[0]
-		phones = wrd[1:]
-
-		if label == 'sil':
-			sil_end = phones[-1][2]
-			if current_words:
-				end = pending_sp_start if pending_sp_start is not None else current_words[-1][-1][2]
-				start = current_start if current_start is not None else current_words[0][1][1]
-				text_tokens = [_display(w[0]) for w in current_words if w[0] not in {'sil', 'sp'}]
-				text = ' '.join(t for t in text_tokens if t)
-				if text and start < end:
-					utterances.append([text, start, end])
-				current_words = []
-				pending_sp_start = None
-			current_start = sil_end
-			continue
-
-		if label == 'sp':
-			pending_sp_start = phones[0][1]
-			continue
-
-		if not current_words and current_start is None:
-			current_start = phones[0][1]
-		current_words.append(wrd)
-		pending_sp_start = None
-
-	# Fallback in case the alignment does not end with sil
-	if current_words:
-		end = pending_sp_start if pending_sp_start is not None else current_words[-1][-1][2]
-		start = current_start if current_start is not None else current_words[0][1][1]
-		text_tokens = [_display(w[0]) for w in current_words if w[0] not in {'sil', 'sp'}]
-		text = ' '.join(t for t in text_tokens if t)
-		if text and start < end:
-			utterances.append([text, start, end])
-
-	return utterances
-
-
-def writeTextGrid(outfile, word_alignments, display_map=None):
-	def _display(label):
-		if display_map:
-			return display_map.get(label, display_map.get(label.upper(), display_map.get(label.lower(), label)))
-		return label
-
+def writeTextGrid(outfile, word_alignments):
 	# make the list of just phone alignments
 	phons = []
 	for wrd in word_alignments:
@@ -381,26 +224,6 @@ def writeTextGrid(outfile, word_alignments, display_map=None):
 			continue
 		wrds.append([wrd[0], wrd[1][1], wrd[-1][2]])
 
-	# syllable intervals derived from phone-level alignment
-	sylls = _build_syllable_intervals(word_alignments)
-
-	# utterance intervals bounded by sil tokens
-	utterances = _build_utterance_intervals(word_alignments, display_map)
-	tier_start = phons[0][1] if phons else 0.0
-	tier_end = phons[-1][-1] if phons else tier_start
-	utterance_intervals = []
-	cursor = tier_start
-	for utt in utterances:
-		start, end = utt[1], utt[2]
-		if start > cursor:
-			utterance_intervals.append(['', cursor, start])
-		utterance_intervals.append([utt[0], start, end])
-		cursor = end
-	if cursor < tier_end:
-		utterance_intervals.append(['', cursor, tier_end])
-	if not utterance_intervals and tier_start < tier_end:
-		utterance_intervals.append(['', tier_start, tier_end])
-
 	# write the phone interval tier
 	with open(outfile, 'w') as fw:
 		fw.write('File type = "ooTextFile short"\n')
@@ -409,7 +232,7 @@ def writeTextGrid(outfile, word_alignments, display_map=None):
 		fw.write(str(phons[0][1]) + '\n')
 		fw.write(str(phons[-1][2]) + '\n')
 		fw.write('<exists>\n')
-		fw.write('4\n')
+		fw.write('2\n')
 		fw.write('"IntervalTier"\n')
 		fw.write('"phone"\n')
 		fw.write(str(phons[0][1]) + '\n')
@@ -420,17 +243,6 @@ def writeTextGrid(outfile, word_alignments, display_map=None):
 			fw.write(str(phons[k][2]) + '\n')
 			fw.write('"' + phons[k][0] + '"' + '\n')
 
-		# write the syllable interval tier
-		fw.write('"IntervalTier"\n')
-		fw.write('"syllable"\n')
-		fw.write(str(phons[0][1]) + '\n')
-		fw.write(str(phons[-1][-1]) + '\n')
-		fw.write(str(len(sylls)) + '\n')
-		for syl in sylls:
-			fw.write(str(syl[1]) + '\n')
-			fw.write(str(syl[2]) + '\n')
-			fw.write('"' + syl[0] + '"' + '\n')
-
 		# write the word interval tier
 		fw.write('"IntervalTier"\n')
 		fw.write('"word"\n')
@@ -440,22 +252,11 @@ def writeTextGrid(outfile, word_alignments, display_map=None):
 		for k in range(len(wrds) - 1):
 			fw.write(str(wrds[k][1]) + '\n')
 			fw.write(str(wrds[k + 1][1]) + '\n')
-			fw.write('"' + _display(wrds[k][0]) + '"' + '\n')
+			fw.write('"' + wrds[k][0] + '"' + '\n')
 
 		fw.write(str(wrds[-1][1]) + '\n')
 		fw.write(str(phons[-1][2]) + '\n')
-		fw.write('"' + _display(wrds[-1][0]) + '"' + '\n')
-
-		# write the utterance interval tier
-		fw.write('"IntervalTier"\n')
-		fw.write('"utterance"\n')
-		fw.write(str(phons[0][1]) + '\n')
-		fw.write(str(phons[-1][-1]) + '\n')
-		fw.write(str(len(utterance_intervals)) + '\n')
-		for utt in utterance_intervals:
-			fw.write(str(utt[1]) + '\n')
-			fw.write(str(utt[2]) + '\n')
-			fw.write('"' + utt[0] + '"' + '\n')
+		fw.write('"' + wrds[-1][0] + '"' + '\n')
 
 
 def prep_working_directory():
@@ -504,7 +305,6 @@ if __name__ == '__main__':
 		# Do NOT insert sp in MLF to avoid tee-model conflicts
 		surround_token = getopt2("-p", opts, 'sil')
 		between_token = getopt2("-b", opts, None)
-		display_map = None
 
 		if sr_override is not None:
 			try:
@@ -574,14 +374,12 @@ if __name__ == '__main__':
 		os.system('cd ./bin && python3 add_dict.py')
 		# 4) Use the merged dict from bin for this run
 		os.system('cp -f ./bin/dict ' + word_dictionary)
-		display_map = _build_display_map('./tmp/hangul.txt', trsfile_for_mlf)
 	else:
 		# Default: start from model dict (+ optional local)
 		if os.path.exists("dict.local"):
 			os.system("cat " + mypath + "/dict dict.local > " + word_dictionary)
 		else:
 			os.system("cat " + mypath + "/dict > " + word_dictionary)
-		display_map = {}
 
 	# prepare wavefile: do a resampling if necessary
 	tmpwav = "./tmp/sound.wav"
@@ -607,10 +405,6 @@ if __name__ == '__main__':
 	viterbi(input_mlf, word_dictionary, output_mlf, mpfile, mypath + hmmsubdir)
 
 	# output the alignment as a Praat TextGrid
-	alignments = readAlignedMLF(output_mlf, SR, float(wave_start))
-	if display_map is None:
-		display_map = {}
-	display_map.setdefault('SIL', 'sil')
-	display_map.setdefault('SP', 'sp')
-	writeTextGrid(outfile, alignments, display_map)
+	writeTextGrid(outfile, readAlignedMLF(output_mlf, SR, float(wave_start)))
+
 

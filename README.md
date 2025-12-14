@@ -27,6 +27,7 @@
 - **사전 자동 확장**: 미등록 단어에 대한 발음 사전 자동 생성
 - **웹 인터페이스**: Flask 기반 웹 애플리케이션 제공
 - **Short Pause (sp) 처리**: 단어 사이의 휴지를 별도 구간으로 분리
+- **멀티 Tier TextGrid**: phone/word/syllable/utterance tier 생성 및 한글 라벨 지원
 
 ## 💻 시스템 요구사항
 
@@ -113,8 +114,12 @@ python3 align.py test/mv01_t01_s01.wav test/mv01_t01_s01.lab output.TextGrid
 
 **TextGrid 파일** (Praat 호환):
 - **phone tier**: 음소 단위 정렬 (`gg`, `i`, `c`, `a`, `d`, `o`, ...)
-- **word tier**: 단어 단위 정렬 (`GICADO`, `JEONGIDO`, `EOBSEOSSDA`)
+- **syllable tier**: 한국어 음절 규칙(CV(C)) 기반의 자동 음절 경계
+- **word tier**: 단어 단위 정렬 및 (한글 입력 시) 원문 라벨 표시
+- **utterance tier**: `sil` 사이 구간을 문장 단위로 합치며 한글 라벨 표시
 - **경계 표시**: `sil` (silence), `sp` (short pause)
+
+![KFaligner TextGrid output](./kfalign_textgrid_output.png)
 
 ### 리샘플링 (옵션)
 
@@ -260,6 +265,13 @@ HVite -T 1 -a -m \
 - `-m`: 모델 사용
 - `-I`: 입력 MLF (Master Label File)
 - `-H`: HMM 정의 파일
+
+### TextGrid 다중 Tier 생성
+
+- `readAlignedMLF()`에서 단어 끝 `sp`를 분리한 후, `writeTextGrid()`에서 phone, syllable, word, utterance tier를 생성합니다.
+- `_build_syllable_intervals()`는 로마자 음소열을 기반으로 한국어 음절 경계를 추정합니다.
+- `_build_utterance_intervals()`는 `sil` 사이 구간을 하나의 발화로 묶고, 한글 전사에서 변환된 원문 문자열을 라벨로 사용합니다.
+- 한글 입력 시 `_build_display_map()`이 로마자/한글 매핑을 만들어 word·utterance tier에서 한글 라벨을 출력합니다.
 
 ### Short Pause (sp) 처리
 
