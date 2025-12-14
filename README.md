@@ -31,6 +31,11 @@
 
 ## 📖 사용법
 
+### 기본 사용법 (web interface)
+
+![KFaligner](http://210.125.93.241:5000)
+
+
 ### 기본 사용법 (커맨드라인)
 
 ```bash
@@ -39,7 +44,7 @@ python3 align.py <audio.wav> <transcript.lab> <output.TextGrid>
 
 **예시:**
 ```bash
-python3 align.py test/mv01_t01_s01.wav test/mv01_t01_s01.lab output.TextGrid
+python3 align.py test/mv01_t01_s01.wav test/mv01_t01_s01.lab test/mv01_t01_s01.TextGrid
 ```
 
 ### 입력 파일 형식
