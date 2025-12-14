@@ -65,6 +65,10 @@ python3 align.py test/mv01_t01_s01.wav test/mv01_t01_s01.lab output.TextGrid
 - **utterance tier**: `sil` 사이 구간을 문장 단위로 합치며 한글 라벨 표시
 - **경계 표시**: `sil` (silence), `sp` (short pause)
 
+
+![KFaligner TextGrid output](./kfalign_textgrid_output.png)
+
+
 ## 💻 시스템 요구사항
 
 ### 필수 요구사항
@@ -146,16 +150,6 @@ python3 align.py test/mv01_t01_s01.wav test/mv01_t01_s01.lab output.TextGrid
 - **형식**: 한국어 철자법 텍스트 (한 줄)
 - **예시**: `기차도 정이도 없었다`
 
-### 출력 파일 형식
-
-**TextGrid 파일** (Praat 호환):
-- **phone tier**: 음소 단위 정렬 (`gg`, `i`, `c`, `a`, `d`, `o`, ...)
-- **syllable tier**: 한국어 음절 규칙(CV(C)) 기반의 자동 음절 경계
-- **word tier**: 단어 단위 정렬 및 (한글 입력 시) 원문 라벨 표시
-- **utterance tier**: `sil` 사이 구간을 문장 단위로 합치며 한글 라벨 표시
-- **경계 표시**: `sil` (silence), `sp` (short pause)
-
-![KFaligner TextGrid output](./kfalign_textgrid_output.png)
 
 ### 리샘플링 (옵션)
 
