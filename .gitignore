@@ -53,3 +53,7 @@ test/*.tg
 
 # Local config
 kfaligner_http.conf
+
+# Markdown documentation (keep only top-level README)
+*.md
+!README.md

@@ -293,8 +293,6 @@ for wrd in ret:
 
 **결과**: 단어 사이의 pause가 별도 구간으로 TextGrid에 표시됩니다.
 
-자세한 내용: [SP_SEPARATION_FINAL.md](SP_SEPARATION_FINAL.md)
-
 ### 음소 체계
 
 한국어 로마자 표기 기반 음소:
@@ -324,8 +322,6 @@ for wrd in ret:
 - `between_token = None` 설정 (MLF에 sp 삽입 안 함)
 - 사전에만 sp 유지
 
-참고: [ALIGNMENT_FIX_REPORT.md](ALIGNMENT_FIX_REPORT.md)
-
 ### 2. 중복 sil 토큰
 
 **증상**: 문장 시작/끝에 `sil sil` 나타남
@@ -333,8 +329,6 @@ for wrd in ret:
 **원인**: `-b sil` 옵션 + MLF의 sil = 중복
 
 **해결**: HVite에서 `-b` 옵션 제거
-
-참고: [MLF_DEDUPLICATION_FIX.md](MLF_DEDUPLICATION_FIX.md)
 
 ### 3. 사전에 없는 단어
 
@@ -374,15 +368,6 @@ export MAX_CONTENT_LENGTH_MB=128
 # Nginx 설정 (프록시 사용 시)
 client_max_body_size 128M;
 ```
-
-## 📚 추가 문서
-
-- [SP_SEPARATION_FINAL.md](SP_SEPARATION_FINAL.md) - sp 분리 로직 상세 설명
-- [SP_SIL_EXPLANATION.md](SP_SIL_EXPLANATION.md) - sp와 sil의 차이
-- [ALIGNMENT_FIX_REPORT.md](ALIGNMENT_FIX_REPORT.md) - dur<=0 에러 해결
-- [MLF_DEDUPLICATION_FIX.md](MLF_DEDUPLICATION_FIX.md) - 중복 토큰 수정
-- [SERVER_MANAGEMENT.md](SERVER_MANAGEMENT.md) - 서버 운영 가이드
-- [CHANGELOG_RESAMPLING.md](CHANGELOG_RESAMPLING.md) - 리샘플링 변경 이력
 
 ## 🙏 감사의 말
 
